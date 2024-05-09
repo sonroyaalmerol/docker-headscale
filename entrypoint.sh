@@ -20,11 +20,9 @@ process_env_variables() {
   done
 }
 
-env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee -a "$tmp_config_file"
+env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$tmp_config_file"
 
-yq eval-all '. as $item ireduce ({}; . * $item)' "$config_file" "$tmp_config_file" | tee "$config_file"
-
-rm -rf "$tmp_config_file"
+yq eval-all '. as $item ireduce ({}; . * $item)' "$config_file" "$tmp_config_file"
 
 /usr/bin/headscale serve
 
