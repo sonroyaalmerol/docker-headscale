@@ -10,6 +10,7 @@ ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH} /u
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN apt-get update \
+  && apt-get install -y ca-certificates \
   && apt-get install /tmp/headscale.deb \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean \
