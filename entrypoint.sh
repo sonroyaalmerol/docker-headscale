@@ -3,6 +3,8 @@
 config_file="/etc/headscale/config.yaml"
 tmp_config_file="/etc/headscale/config_tmp.yaml"
 
+sed -i '1 s/^---//' "$config_file"
+
 rm -rf "$tmp_config_file"
 touch "$tmp_config_file"
 
