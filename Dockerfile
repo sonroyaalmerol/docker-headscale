@@ -14,7 +14,8 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean \
   && rm -rf /tmp/headscale.deb \
-  && chmod +x /usr/bin/yq
+  && chmod +x /usr/bin/yq \
+  && chmod +x /entrypoint.sh
 
 EXPOSE 8080/tcp
 
