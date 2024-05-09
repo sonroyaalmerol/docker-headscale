@@ -19,4 +19,4 @@ RUN apt-get update \
 
 EXPOSE 8080/tcp
 
-ENTRYPOINT ["entrypoint.sh"]
+CMD ["bash", "/usr/local/bin/entrypoint.sh"]
