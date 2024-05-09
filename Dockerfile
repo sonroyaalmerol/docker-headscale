@@ -7,7 +7,7 @@ ADD https://github.com/juanfont/headscale/releases/download/v${VERSION}/headscal
 
 ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH} /usr/bin/yq
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN apt-get update \
   && apt-get install /tmp/headscale.deb \
@@ -19,4 +19,4 @@ RUN apt-get update \
 
 EXPOSE 8080/tcp
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
