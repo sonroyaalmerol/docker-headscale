@@ -2,6 +2,7 @@
 
 config_file="/etc/headscale/config.yaml"
 tmp_config_file="/etc/headscale/config_tmp.yaml"
+new_config_file="/etc/headscale/config_new.yaml"
 
 sed -i '1 s/^---//' "$config_file"
 
@@ -24,7 +25,7 @@ process_env_variables() {
 
 env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$tmp_config_file"
 
-yq ". *= load(\"$tmp_config_file\")" "$config_file"
+yq ". *= load(\"$tmp_config_file\")" "$config_file" > "$new_config_file"
 
 /usr/bin/headscale serve
 
