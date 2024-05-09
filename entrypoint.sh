@@ -2,12 +2,15 @@
 
 config_file="/etc/headscale/config.yaml"
 tmp_config_file="/etc/headscale/config_tmp.yaml"
-new_config_file="/etc/headscale/config_new.yaml"
+old_config_file="/etc/headscale/config_old.yaml"
 
-sed -i '1 s/^---//' "$config_file"
+sed -i '1 s/^---\n//' "$config_file"
 
 rm -rf "$tmp_config_file"
+rm -rf "$old_config_file"
 touch "$tmp_config_file"
+
+mv "$config_file" "$old_config_file"
 
 process_env_variables() {
   while IFS='=' read -r key value; do
@@ -25,7 +28,10 @@ process_env_variables() {
 
 env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$tmp_config_file"
 
-yq ". *= load(\"$tmp_config_file\")" "$config_file" > "$new_config_file"
+yq ". *= load(\"$tmp_config_file\")" "$old_config_file" > "$config_file"
+
+rm -rf "$tmp_config_file"
+rm -rf "$old_config_file"
 
 /usr/bin/headscale serve
 
