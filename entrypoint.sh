@@ -2,7 +2,7 @@
 
 custom_config_folder="/etc/headscale/config.yaml.d"
 config_file="/etc/headscale/config.yaml"
-template_config_file="/etc/headscale/config_template.yaml"
+template_config_file="$custom_config_folder/00_template.yaml"
 
 mkdir -p "$custom_config_folder"
 
@@ -25,7 +25,14 @@ process_env_variables() {
 
 env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$custom_config_folder/99_env.yaml"
 
-yq eval-all '. as $item ireduce ({}; . * $item )' "$template_config_file" "$custom_config_folder/"*".yml" "$custom_config_folder/"*".yaml" > "$config_file"
+# rename *.yml to *.yaml
+for file in "$custom_config_folder"/*.yml; do
+  if [ -e "$file" ]; then
+    mv "$file" "${file%.yml}.yaml"
+  fi
+done
+
+yq eval-all '. as $item ireduce ({}; . * $item )' "$custom_config_folder/"*".yaml" > "$config_file"
 
 /usr/bin/headscale serve
 
