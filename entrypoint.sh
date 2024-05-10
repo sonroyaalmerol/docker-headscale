@@ -25,7 +25,7 @@ process_env_variables() {
 
 env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$custom_config_folder/99_env.yaml"
 
-yq eval-all '. as $item ireduce ({}; . * $item )' "$template_config_file" "$custom_config_folder/*.yml" "$custom_config_folder/*.yaml" > "$config_file"
+yq eval-all '. as $item ireduce ({}; . * $item )' "$template_config_file" "$custom_config_folder/"*".yml" "$custom_config_folder/"*".yaml" > "$config_file"
 
 /usr/bin/headscale serve
 
