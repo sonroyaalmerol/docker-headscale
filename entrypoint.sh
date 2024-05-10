@@ -1,6 +1,6 @@
 #!/bin/sh
 
-custom_config_folder="/etc/headscale/config.yaml.d/"
+custom_config_folder="/etc/headscale/config.yaml.d"
 config_file="/etc/headscale/config.yaml"
 template_config_file="/etc/headscale/config_template.yaml"
 
