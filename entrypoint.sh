@@ -11,6 +11,11 @@ fi
 chown -R headscale: /etc/headscale
 chown -R headscale: /var/lib/headscale
 
+# Check if watch config dir is enabled
+if [ "$WATCH_CONFIG_DIR" = "true" ]; then
+  sed -i '/\[program:config-watcher\]/{n;s/autostart=false/autostart=true/}' /srv/docker-headscale/supervisord.conf
+fi
+
 mkdir -p "$custom_config_folder"
 
 rm -rf "$template_config_file"
