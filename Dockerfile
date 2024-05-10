@@ -8,7 +8,7 @@ ADD https://github.com/juanfont/headscale/releases/download/v${VERSION}/headscal
 ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH} /usr/bin/yq
 
 COPY entrypoint.sh /srv/entrypoint.sh
-COPY scripts/ /srv/scripts/
+ADD scripts /srv/scripts
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Set user and group
