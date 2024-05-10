@@ -1,16 +1,13 @@
 #!/bin/sh
 
+custom_config_folder="/etc/headscale/config.yaml.d/"
 config_file="/etc/headscale/config.yaml"
-tmp_config_file="/etc/headscale/config_tmp.yaml"
-old_config_file="/etc/headscale/config_old.yaml"
+template_config_file="/etc/headscale/config_template.yaml"
 
-sed -i '1 s/^---\n//' "$config_file"
+mkdir -p "$custom_config_folder"
 
-rm -rf "$tmp_config_file"
-rm -rf "$old_config_file"
-touch "$tmp_config_file"
-
-mv "$config_file" "$old_config_file"
+rm -rf "$template_config_file"
+mv "$config_file" "$template_config_file"
 
 process_env_variables() {
   while IFS='=' read -r key value; do
@@ -26,12 +23,9 @@ process_env_variables() {
   done
 }
 
-env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$tmp_config_file"
+env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$custom_config_folder/99_env.yaml"
 
-yq ". *= load(\"$tmp_config_file\")" "$old_config_file" > "$config_file"
-
-rm -rf "$tmp_config_file"
-rm -rf "$old_config_file"
+yq eval-all '. as $item ireduce ({}; . * $item )' "$template_config_file" "$custom_config_folder/*.yml" "$custom_config_folder/*.yaml" > "$config_file"
 
 /usr/bin/headscale serve
 
