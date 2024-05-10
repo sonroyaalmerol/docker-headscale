@@ -11,6 +11,7 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN apt-get update \
   && apt-get install -y ca-certificates \
+    inotify-tools \
   && apt-get install /tmp/headscale.deb \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean \
