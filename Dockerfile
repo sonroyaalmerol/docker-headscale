@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim
 
-ARG VERSION=0.22.3
+ARG VERSION=0.23.0-alpha11
 ARG ARCH=amd64
 
 ADD https://github.com/juanfont/headscale/releases/download/v${VERSION}/headscale_${VERSION}_linux_${ARCH}.deb /tmp/headscale.deb
