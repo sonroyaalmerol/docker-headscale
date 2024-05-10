@@ -1,7 +1,7 @@
 #!/bin/sh
 
-source ./helper/vars.sh
-source ./helper/functions.sh
+. ./helper/vars.sh
+. ./helper/functions.sh
 
 # Set process UID and GID at runtime
 if [ -n "$PUID" ] && [ -n "$PGID" ]; then

@@ -38,8 +38,6 @@ RUN apt-get update \
   && chown -R headscale: /etc/headscale \
   && chown -R headscale: /srv/docker-headscale
 
-USER ${PUID}:${PGID}
-
 EXPOSE 8080/tcp
 
 CMD ["/srv/docker-headscale/entrypoint.sh"]
