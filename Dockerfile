@@ -22,7 +22,7 @@ RUN useradd -u ${PUID} -g ${group} -s /bin/sh -m ${user}
 
 ENV CONFIG_DIR=/etc/headscale/config.yaml.d
 
-ENV WATCH_CONFIG_DIR=true
+ENV WATCH_CONFIG_DIR=false
 
 RUN apt-get update \
   && apt-get install -y ca-certificates \
