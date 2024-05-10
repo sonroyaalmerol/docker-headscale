@@ -10,7 +10,7 @@ ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH} /u
 COPY entrypoint.sh /srv/docker-headscale/entrypoint.sh
 COPY config-watcher.sh /srv/docker-headscale/config-watcher.sh
 ADD helper /srv/docker-headscale/helper
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY supervisord.conf /srv/docker-headscale/supervisord.conf
 
 # Set user and group
 ARG user=headscale
@@ -36,6 +36,7 @@ RUN apt-get update \
   && chmod +x /srv/docker-headscale/config-watcher.sh \
   && chmod +x /srv/docker-headscale/helper/*.sh \
   && chown -R headscale: /etc/headscale \
+  && chown -R headscale: /var/lib/headscale \
   && chown -R headscale: /srv/docker-headscale
 
 EXPOSE 8080/tcp

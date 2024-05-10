@@ -9,6 +9,7 @@ if [ -n "$PUID" ] && [ -n "$PGID" ]; then
     usermod -u $PUID -g $PGID headscale
 fi
 chown -R headscale: /etc/headscale
+chown -R headscale: /var/lib/headscale
 
 mkdir -p "$custom_config_folder"
 
@@ -26,5 +27,5 @@ done
 
 merge_config_folder "$custom_config_folder" "$config_file"
 
-/usr/bin/supervisord
+/usr/bin/supervisord -c /srv/docker-headscale/supervisord.conf
 
