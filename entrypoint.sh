@@ -1,29 +1,21 @@
 #!/bin/sh
 
-custom_config_folder="/etc/headscale/config.yaml.d"
-config_file="/etc/headscale/config.yaml"
-template_config_file="$custom_config_folder/00_template.yaml"
+. ./scripts/vars.sh
+. ./scripts/functions.sh
+
+# Set process UID and GID at runtime
+if [ -n "$PUID" ] && [ -n "$PGID" ]; then
+    groupmod -g $PGID headscale
+    usermod -u $PUID -g $PGID headscale
+fi
+chown -R headscale: /etc/headscale
 
 mkdir -p "$custom_config_folder"
 
 rm -rf "$template_config_file"
 mv "$config_file" "$template_config_file"
 
-process_env_variables() {
-  while IFS='=' read -r key value; do
-    key=$(echo "$key" | tr '[:lower:]' '[:upper:]')
-
-    # Convert them to .properties format for yq
-    if echo "$key" | grep -Eq '^HS_.*'; then
-      key=$(echo "$key" | sed 's/^HS_//')
-      key=$(echo "$key" | tr '[:upper:]' '[:lower:]')
-      key=$(echo "$key" | sed 's/__/\./g')
-      printf "%s=%s\n" "$key" "$value"
-    fi
-  done
-}
-
-env | process_env_variables | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$custom_config_folder/99_env.yaml"
+env | env_to_properties | yq -p=props -oy - | sed 's/"true"/true/g;s/"false"/false/g' | tee "$custom_config_folder/99_env.yaml"
 
 # rename *.yml to *.yaml
 for file in "$custom_config_folder"/*.yml; do
@@ -32,7 +24,7 @@ for file in "$custom_config_folder"/*.yml; do
   fi
 done
 
-yq eval-all '. as $item ireduce ({}; . * $item )' "$custom_config_folder/"*".yaml" > "$config_file"
+merge_config_folder "$custom_config_folder" "$config_file"
 
-/usr/bin/headscale serve
+/usr/bin/supervisord
 
