@@ -1,7 +1,7 @@
 #!/bin/sh
 
-. ./helper/vars.sh
-. ./helper/functions.sh
+. /srv/docker-headscale/helper/vars.sh
+. /srv/docker-headscale/helper/functions.sh
 
 # Set process UID and GID at runtime
 if [ -n "$PUID" ] && [ -n "$PGID" ]; then

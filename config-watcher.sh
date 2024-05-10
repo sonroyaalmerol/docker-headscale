@@ -1,7 +1,7 @@
 #!/bin/sh
 
-. ./helper/vars.sh
-. ./helper/functions.sh
+. /srv/docker-headscale/helper/vars.sh
+. /srv/docker-headscale/helper/functions.sh
 
 # Start watching for changes
 inotifywait -m -e modify,create,delete "$custom_config_folder" |
