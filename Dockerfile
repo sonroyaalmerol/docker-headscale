@@ -7,8 +7,9 @@ ADD https://github.com/juanfont/headscale/releases/download/v${VERSION}/headscal
 
 ADD https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH} /usr/bin/yq
 
-COPY entrypoint.sh /srv/entrypoint.sh
-ADD scripts /srv/scripts
+COPY entrypoint.sh /srv/docker-headscale/entrypoint.sh
+COPY config-watcher.sh /srv/docker-headscale/config-watcher.sh
+ADD helper /srv/docker-headscale/helper
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Set user and group
@@ -31,12 +32,14 @@ RUN apt-get update \
   && rm -rf /tmp/headscale.deb \
   && mkdir -p ${CONFIG_DIR} \
   && chmod +x /usr/bin/yq \
-  && chmod +x /srv/entrypoint.sh \
-  && chmod +x /srv/scripts/*.sh \
-  && chown -R headscale: /etc/headscale
+  && chmod +x /srv/docker-headscale/entrypoint.sh \
+  && chmod +x /srv/docker-headscale/config-watcher.sh \
+  && chmod +x /srv/docker-headscale/helper/*.sh \
+  && chown -R headscale: /etc/headscale \
+  && chown -R headscale: /srv/docker-headscale
 
 USER ${PUID}:${PGID}
 
 EXPOSE 8080/tcp
 
-CMD ["/srv/entrypoint.sh"]
+CMD ["/srv/docker-headscale/entrypoint.sh"]

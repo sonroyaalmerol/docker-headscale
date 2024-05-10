@@ -1,7 +1,7 @@
 #!/bin/sh
 
-. ./vars.sh
-. ./functions.sh
+source ./helper/vars.sh
+source ./helper/functions.sh
 
 # Start watching for changes
 inotifywait -m -e modify,create,delete "$custom_config_folder" |
